@@ -1,0 +1,4 @@
+.DS_Store
+GitHubActivity/build/
+*.xcuserstate
+xcuserdata/
