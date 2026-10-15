@@ -1,11 +1,20 @@
+import AppKit
 import SwiftUI
 import WidgetKit
 
 @main
 struct GitHubActivityApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+
     var body: some Scene {
         WindowGroup("GitHub Activity", id: "main") { ContentView() }
             .windowResizability(.contentSize)
+    }
+}
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
+        true
     }
 }
 

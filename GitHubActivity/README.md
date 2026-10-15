@@ -8,6 +8,8 @@ Native SwiftUI-App mit WidgetKit-Widget für macOS 14 oder neuer. Der Beitragska
 2. Rechtsklick auf den Schreibtisch → Widgets bearbeiten → GitHub Activity hinzufügen.
 3. In der App den gewünschten GitHub-Benutzernamen laden. Das Widget übernimmt ihn automatisch und aktualisiert sich.
 
+Beim Schließen des letzten App-Fensters über das rote × wird die App vollständig beendet. Das Widget läuft unabhängig davon weiter.
+
 Widgets verwenden standardmäßig das zuletzt erfolgreich in der App geladene Profil. Der gemeinsame Profilname liegt in einem Schlüsselbund-Eintrag mit Zugriff für App und Widget. Ein zusätzlicher Ladevorgang in den Widget-Einstellungen ist nicht erforderlich. Falls ein Widget bewusst ein anderes Profil anzeigen soll, kann „Profil aus der App übernehmen“ ausgeschaltet und sein eigener Benutzername gesetzt werden.
 
 App und Widget folgen der bevorzugten Systemsprache und unterstützen Deutsch und Englisch. Andere Sprachen verwenden Englisch als Fallback.
