@@ -37,6 +37,8 @@ targets=[]
 for name, entry, product, bundle, productType in [
     ('App', 'App/GitHubActivityApp.swift', appProduct, 'de.raudzis.GitHubActivity', 'com.apple.product-type.application'),
     ('Widget', 'Widget/ActivityWidget.swift', widgetProduct, 'de.raudzis.GitHubActivity.Widget', 'com.apple.product-type.app-extension')]:
+    signing_identifier = bundle
+    bundle = bundle.lower()
     builds = [add(name + path, f'isa = PBXBuildFile; fileRef = {files[path]};') for path in ['Shared/Contributions.swift', 'Shared/HeatmapView.swift', 'Shared/ProfileIntent.swift', 'Shared/ProfileLink.swift', 'Shared/WidgetAppearance.swift', 'Shared/GitHubAPI.swift', 'Shared/GitHubProfileStore.swift', entry]]
     sources = add(name + 'sources', f'isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = {arr(builds)}; runOnlyForDeploymentPostprocessing = 0;')
     frameworks = add(name + 'frameworks', 'isa = PBXFrameworksBuildPhase; buildActionMask = 2147483647; files = (); runOnlyForDeploymentPostprocessing = 0;')
@@ -45,11 +47,14 @@ for name, entry, product, bundle, productType in [
     resources = add(name + 'resources', f'isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = {arr([resourceFile, iconBuild])}; runOnlyForDeploymentPostprocessing = 0;')
     settings = f'ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; PRODUCT_BUNDLE_IDENTIFIER = {bundle}; PRODUCT_NAME = {q("GitHub Activity" if name == "App" else "GitHubActivityWidget")}; INFOPLIST_FILE = {name}/Info.plist; CODE_SIGN_ENTITLEMENTS = {name}/{name}.entitlements; SKIP_INSTALL = {"YES" if name == "Widget" else "NO"};'
     if name == 'Widget': settings += ' APPLICATION_EXTENSION_API_ONLY = YES;'
+    # Bundle IDs are case-insensitive, but the gallery bitmap resolver on this
+    # Mac requires canonical lowercase IDs. Preserve signing IDs for Keychain ACLs.
+    settings += f' OTHER_CODE_SIGN_FLAGS = "--identifier {signing_identifier}";'
     conf = configs(name, settings)
     phases = [sources, frameworks, resources] + ([embed] if name == 'App' else [])
     target = add(name, f'isa = PBXNativeTarget; buildConfigurationList = {conf}; buildPhases = {arr(phases)}; buildRules = (); dependencies = {arr([dependency]) if name == "App" else "()"}; name = {q("GitHubActivity" if name == "App" else "GitHubActivityWidget")}; productName = {name}; productReference = {product}; productType = {q(productType)};')
     targets.append(target)
-    info = {'CFBundleDevelopmentRegion':'en', 'CFBundleExecutable':'$(EXECUTABLE_NAME)', 'CFBundleIdentifier':'$(PRODUCT_BUNDLE_IDENTIFIER)', 'CFBundleInfoDictionaryVersion':'6.0', 'CFBundleName':'$(PRODUCT_NAME)', 'CFBundlePackageType':'APPL' if name == 'App' else 'XPC!', 'CFBundleShortVersionString':'2.4', 'CFBundleVersion':'16', 'LSMinimumSystemVersion':'$(MACOSX_DEPLOYMENT_TARGET)'}
+    info = {'CFBundleDevelopmentRegion':'en', 'CFBundleExecutable':'$(EXECUTABLE_NAME)', 'CFBundleIdentifier':'$(PRODUCT_BUNDLE_IDENTIFIER)', 'CFBundleInfoDictionaryVersion':'6.0', 'CFBundleName':'$(PRODUCT_NAME)', 'CFBundlePackageType':'APPL' if name == 'App' else 'XPC!', 'CFBundleShortVersionString':'2.4', 'CFBundleVersion':'19', 'LSMinimumSystemVersion':'$(MACOSX_DEPLOYMENT_TARGET)'}
     info['CFBundleIconName'] = 'AppIcon'
     if name == 'Widget': info['NSExtension'] = {'NSExtensionPointIdentifier':'com.apple.widgetkit-extension'}
     else: info['NSPrincipalClass']='NSApplication'

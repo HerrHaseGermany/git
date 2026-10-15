@@ -66,7 +66,11 @@ Apple aktiviert die automatische Liquid-Glass-Hintergrunddarstellung für den kl
 
 Seit Version 1.9 werden Tageszahlen aus den Kalender-Tooltips gelesen. Die Farbintensität skaliert relativ zum Maximum des sichtbaren Zeitraums. Zukünftige Kalendertage werden vor der Darstellung ausgeschlossen. Alte Cache-Dateien ohne Tageszahlen bleiben lesbar und verwenden bis zum nächsten erfolgreichen Abruf ihre gespeicherten Intensitäten.
 
-Der Icon-Dienst hielt während der Entwicklung einen Platzhalter im Cache. Nach Neustart des benutzereigenen `iconservicesagent` liefert `NSWorkspace.icon(forFile:)` das tatsächliche App-Icon. Ein Neustart von Notification Center aktualisiert auch die laufende Widget-Galerie, ohne Widgets oder Einstellungen zu löschen.
+Die Widget-Galerie dieses Macs löste die gemischt geschriebene App-Kennung `de.raudzis.GitHubActivity` als Platzhalter auf. Die Diagnose über denselben Galerie-Resolver (`CHSIconResolver` / `CHSWidgetExtensionContainer`) zeigte dagegen für `de.raudzis.githubactivity` das richtige Icon. Eine korrekte Finder-Darstellung allein reichte als Prüfung nicht aus. Cache-Neustarts und eine direkte ICNS-Einbindung behoben den Galeriefehler nicht.
+
+Seit Build 19 verwenden App und Erweiterung deshalb kleingeschriebene Bundle-Kennungen. Die ursprünglichen Code-Signaturkennungen bleiben über `OTHER_CODE_SIGN_FLAGS --identifier` erhalten, damit bestehende Schlüsselbund-Zugriffsregeln weiterhin passen. Der Build erfüllt die bisherigen Designated Requirements beider Programme; das gespeicherte Profil und die authentifizierte API-Abfrage wurden anschließend erfolgreich geprüft. Die richtige Icon-Anzeige in der Galerie wurde bestätigt. Der Assetkatalog bleibt die Icon-Quelle.
+
+Apple beschreibt [Bundle-Kennungen als unabhängig von Groß-/Kleinschreibung](https://developer.apple.com/documentation/bundleresources/information-property-list/cfbundleidentifier). Die abweichende Galerie-Auflösung wurde auf diesem Mac direkt nachgewiesen; daraus folgt keine allgemeine Pflicht zu kleingeschriebenen Kennungen. Die Bedeutung der gesonderten Signaturkennung erläutert [TN3127: Inside Code Signing: Requirements](https://developer.apple.com/documentation/technotes/tn3127-inside-code-signing-requirements).
 
 Ein Vergleich mit dem Original-Screenshot zeigt zusätzlich einzelne aktive Tage, die in der aktuellen öffentlichen GitHub-Abfrage und der authentifizierten API-Abfrage nicht vorkommen. Diese verbleibende Abweichung ist nicht erklärt; das Widget ergänzt deshalb keine erfundenen Beiträge.
 
